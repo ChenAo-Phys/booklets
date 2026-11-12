@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>直抵前沿 · Frontier Bound</title>
+<meta name="description" content="Bilingual, interactive booklets for physics beginners. 面向物理初学者的双语交互式手册。">
+<style>
+  :root {
+    --bg: #fbfaf7;
+    --card: #ffffff;
+    --ink: #1d2330;
+    --muted: #6b7280;
+    --line: #e2dfd7;
+    --soft: #f2f0ea;
+    --accent: #3b6fd8;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Noto Serif SC", "Songti SC", serif;
+    --sans: system-ui, -apple-system, "Segoe UI", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1218;
+      --card: #171c26;
+      --ink: #e7e9ef;
+      --muted: #9aa3b2;
+      --line: #2b3240;
+      --soft: #1d2330;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.6;
+  }
+  a { color: inherit; }
+
+  /* ---------- top bar ---------- */
+  .bar {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.7rem clamp(1rem, 4vw, 2.5rem);
+    background: color-mix(in srgb, var(--bg) 85%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .brand { font-family: var(--serif); font-weight: 600; letter-spacing: 0.02em; }
+  .lang-btn {
+    font: inherit; font-size: 0.9rem; cursor: pointer;
+    padding: 0.3rem 0.9rem; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--card); color: var(--ink);
+  }
+  .lang-btn:hover { border-color: var(--accent); }
+
+  /* ---------- hero ---------- */
+  .hero {
+    position: relative; overflow: hidden;
+    padding: clamp(3rem, 9vw, 6rem) clamp(1rem, 4vw, 2.5rem) clamp(2.5rem, 6vw, 4rem);
+    text-align: center;
+  }
+  #waves { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .hero > *:not(canvas) { position: relative; z-index: 1; }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(1.9rem, 5vw, 3.2rem); line-height: 1.2;
+    margin: 0 0 0.4rem;
+  }
+  .hero .alt { color: var(--muted); font-family: var(--serif); font-style: italic; margin: 0 0 1.4rem; font-size: 1.05rem; }
+  .hero .lead { max-width: 38rem; margin: 0 auto 1.8rem; font-size: 1.1rem; }
+  .cta {
+    display: inline-block; text-decoration: none;
+    padding: 0.65rem 1.5rem; border-radius: 999px;
+    background: var(--ink); color: var(--bg); font-weight: 600;
+  }
+  .cta:hover { opacity: 0.88; }
+
+  /* ---------- motivation ---------- */
+  section.why { max-width: 860px; margin: 0 auto; padding: 1rem clamp(1rem, 4vw, 2.5rem) 3rem; }
+  section.why h2 { font-family: var(--serif); font-size: 1.7rem; margin: 0 0 1rem; }
+  section.why p { margin: 0 0 1rem; font-size: 1.04rem; }
+  section.why .goal {
+    font-family: var(--serif); font-size: 1.15rem; font-weight: 600;
+    padding-left: 1rem; border-left: 4px solid var(--accent);
+  }
+
+  .timeline {
+    display: grid; grid-template-columns: 6.5rem repeat(10, 1fr);
+    gap: 0.45rem 0.3rem; align-items: center; margin-top: 1.8rem;
+    font-size: 0.85rem;
+  }
+  .tl-year { grid-row: 1; text-align: center; color: var(--muted); font-size: 0.78rem; }
+  .tl-label { grid-column: 1; color: var(--muted); font-weight: 600; }
+  .seg {
+    padding: 0.45rem 0.6rem; border-radius: 8px; text-align: center; line-height: 1.3;
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 0.7s ease calc(var(--d, 0) * 0.45s);
+  }
+  .timeline.shown .seg { clip-path: inset(0 0 0 0); }
+  .seg.old   { background: var(--soft); color: var(--muted); border: 1px solid var(--line); }
+  .seg.late  { background: transparent; color: var(--muted); border: 1.5px dashed var(--line); }
+  .seg.new   { background: color-mix(in srgb, var(--accent) 16%, var(--card)); border: 1px solid var(--accent); font-weight: 600; }
+  .seg.front { background: linear-gradient(90deg, #8e4fbf, #3b6fd8); color: #fff; font-weight: 600; }
+  @media (max-width: 560px) { .timeline { grid-template-columns: 4.8rem repeat(10, 1fr); font-size: 0.72rem; } }
+
+  /* ---------- principles ---------- */
+  .principles {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem;
+    max-width: 1080px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem);
+  }
+  .principle {
+    background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+    padding: 1rem 1.1rem;
+  }
+  .principle b { font-family: var(--serif); font-size: 1.1rem; }
+  .principle p { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.93rem; }
+
+  /* ---------- map ---------- */
+  section.map { max-width: 1180px; margin: 0 auto; padding: 3.5rem clamp(1rem, 4vw, 2.5rem) 2rem; }
+  section.map h2 { font-family: var(--serif); font-size: 1.7rem; margin: 0 0 0.2rem; }
+  section.map .hint { color: var(--muted); margin: 0 0 1.5rem; }
+  .map-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(280px, 1fr); gap: 1.5rem; align-items: start; }
+  @media (max-width: 860px) { .map-grid { grid-template-columns: 1fr; } }
+
+  .graph-wrap { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 0.5rem; }
+  #graph { width: 100%; height: auto; display: block; user-select: none; }
+
+  .edge { fill: none; stroke: var(--line); stroke-width: 2.2; transition: stroke 0.25s, opacity 0.25s; }
+  .edge.on { stroke: var(--sel); stroke-width: 2.6; stroke-dasharray: 7 6; animation: flow 0.9s linear infinite; }
+  .edge.next { stroke: color-mix(in srgb, var(--sel) 40%, var(--line)); }
+  .edge.dim { opacity: 0.35; }
+  @keyframes flow { to { stroke-dashoffset: -13; } }
+
+  .node { cursor: pointer; transition: opacity 0.25s; outline: none; }
+  .node rect.box { fill: var(--card); stroke: var(--c); stroke-width: 2; transition: fill 0.25s, stroke-width 0.25s; }
+  .node:hover rect.box, .node:focus-visible rect.box { stroke-width: 3; }
+  .node .badge { fill: var(--c); }
+  .node .badge-t { fill: #fff; font: 600 13px var(--sans); text-anchor: middle; dominant-baseline: central; }
+  .node .title { fill: var(--ink); font: 600 17px var(--sans); text-anchor: middle; }
+  .node .eq { fill: var(--muted); font: italic 14px var(--serif); text-anchor: middle; }
+  .node.self rect.box { fill: color-mix(in srgb, var(--c) 16%, var(--card)); stroke-width: 3.5; }
+  .node.next { opacity: 0.7; }
+  .node.dim { opacity: 0.28; }
+
+  /* ---------- detail panel ---------- */
+  .panel {
+    background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+    padding: 1.4rem 1.5rem; min-height: 100%;
+    border-top: 5px solid var(--sel, var(--line));
+    transition: border-color 0.25s;
+  }
+  .panel .meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--muted); }
+  .status { padding: 0.1rem 0.6rem; border-radius: 999px; background: var(--soft); }
+  .panel h3 { font-family: var(--serif); font-size: 1.6rem; margin: 0.5rem 0 0; line-height: 1.25; }
+  .panel .alt { color: var(--muted); font-family: var(--serif); font-style: italic; margin: 0.1rem 0 0.8rem; }
+  .panel .eq { font-family: var(--serif); font-style: italic; font-size: 1.25rem; color: var(--sel); margin: 0 0 0.6rem; }
+  .panel h4 { margin: 1.1rem 0 0.4rem; font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .panel p { margin: 0; }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .chip {
+    font: inherit; font-size: 0.88rem; padding: 0.2rem 0.7rem; border-radius: 999px;
+    background: var(--soft); border: 1px solid transparent; color: var(--ink);
+  }
+  button.chip { cursor: pointer; border-color: var(--line); background: var(--card); }
+  button.chip:hover { border-color: var(--c); }
+  button.chip::before { content: ""; display: inline-block; width: 0.55em; height: 0.55em; border-radius: 50%; background: var(--c); margin-right: 0.4em; vertical-align: 0.05em; }
+  .none { color: var(--muted); font-size: 0.9rem; }
+  .path { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; list-style: none; padding: 0; margin: 0; }
+  .path li { display: flex; align-items: center; gap: 0.3rem; }
+  .path li + li::before { content: "→"; color: var(--muted); }
+  .read {
+    display: inline-block; margin-top: 1.4rem; padding: 0.55rem 1.3rem; border-radius: 999px;
+    text-decoration: none; font-weight: 600; background: var(--sel); color: #fff;
+  }
+  .read[aria-disabled="true"] { background: var(--soft); color: var(--muted); pointer-events: none; }
+  .empty p { color: var(--muted); }
+  .empty .legend { display: grid; gap: 0.45rem; margin-top: 1rem; font-size: 0.9rem; }
+  .legend span { display: inline-block; width: 26px; height: 0; vertical-align: middle; margin-right: 0.5rem; border-top: 2.6px dashed var(--accent); }
+
+  footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 2rem 1rem 3rem; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .edge.on { animation: none; }
+    .seg { transition: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <span class="brand" data-zh="物理手册" data-en="Physics Booklets">物理手册</span>
+  <button class="lang-btn" id="langBtn" type="button" aria-label="Switch language / 切换语言">EN</button>
+</header>
+
+<section class="hero">
+  <canvas id="waves" aria-hidden="true"></canvas>
+  <h1 data-zh="直抵前沿" data-en="Frontier Bound">直抵前沿</h1>
+  <p class="alt" data-zh="Frontier Bound" data-en="直抵前沿">Frontier Bound</p>
+  <p class="lead"
+     data-zh="写给物理初学者的九本互动手册"
+     data-en="Nine interactive booklets for beginning physicists">
+     写给物理初学者的九本互动手册</p>
+  <a class="cta" href="#map" data-zh="查看学习地图" data-en="Explore the map">查看学习地图</a>
+</section>
+
+<section class="why" id="why">
+  <h2 data-zh="为什么写这套书" data-en="Why these booklets">为什么写这套书</h2>
+  <p data-zh="现在，AI 正帮助前沿物理以前所未有的速度飞速进展。然而，物理教学仍以低效的课堂讲授为核心。教学内容也按数学、大学物理、进阶物理（经典力学、量子力学等）、高等课程（固体物理、高等量子力学等）进行多层区分。"
+     data-en="Today, AI is helping frontier physics advance faster than ever. Physics education, however, still centers on inefficient lectures. Its content is also divided into multiple tiers: mathematics, university physics, intermediate physics (e.g., classical mechanics, quantum mechanics), and advanced courses (e.g., solid state physics, advanced quantum mechanics).">
+     现在，AI 正帮助前沿物理以前所未有的速度飞速进展。然而，物理教学仍以低效的课堂讲授为核心。教学内容也按数学、大学物理、进阶物理（经典力学、量子力学等）、高等课程（固体物理、高等量子力学等）进行多层区分。</p>
+  <p data-zh="这就导致一名物理初学者迈入物理学习的大门后，要先低效地苦读数年。在还不理解任何前沿的时候，就要选择进入博士项目或公司做特定方向的研究。而研究刚开始，又会被当作一个不如 AI 的累赘。"
+     data-en="As a result, a beginner stepping into physics must first spend years on inefficient study. Then, before understanding anything at the frontier, they must choose a PhD program or a company and start research in one specific direction. And at the start of that research, they are treated as dead weight, less useful than an AI.">
+     这就导致一名物理初学者迈入物理学习的大门后，要先低效地苦读数年。在还不理解任何前沿的时候，就要选择进入博士项目或公司做特定方向的研究。而研究刚开始，又会被当作一个不如 AI 的累赘。</p>
+  <p class="goal" data-zh="这套教材就是为了改变这种情况，让初学者用两年时间快速理解基础的本科物理，并在第三年就能开始自行接触前沿物理。"
+     data-en="These booklets are here to change that, letting beginners quickly grasp the foundations of undergraduate physics in two years and start exploring frontier physics on their own in the third.">
+     这套教材就是为了改变这种情况，让初学者用两年时间快速理解基础的本科物理，并在第三年就能开始自行接触前沿物理。</p>
+
+  <div class="timeline" id="timeline" role="img"
+       aria-label="传统路径：四年课程后才接触前沿；这套手册：两年打基础，第三年接触前沿。Traditional path: frontier only after four years of courses. These booklets: two years of foundations, frontier from year three.">
+    <div class="tl-year" style="grid-column: 2 / 4" data-zh="第 1 年" data-en="Year 1">第 1 年</div>
+    <div class="tl-year" style="grid-column: 4 / 6" data-zh="第 2 年" data-en="Year 2">第 2 年</div>
+    <div class="tl-year" style="grid-column: 6 / 8" data-zh="第 3 年" data-en="Year 3">第 3 年</div>
+    <div class="tl-year" style="grid-column: 8 / 10" data-zh="第 4 年" data-en="Year 4">第 4 年</div>
+    <div class="tl-year" style="grid-column: 10 / 12" data-zh="第 5 年" data-en="Year 5">第 5 年</div>
+
+    <div class="tl-label" style="grid-row: 2" data-zh="传统路径" data-en="Traditional">传统路径</div>
+    <div class="seg old"  style="grid-row: 2; grid-column: 2 / 5; --d: 0" data-zh="数学 · 大学物理" data-en="Math / Univ. Physics">数学 · 大学物理</div>
+    <div class="seg old"  style="grid-row: 2; grid-column: 5 / 8; --d: 1" data-zh="进阶物理" data-en="Intermediate">进阶物理</div>
+    <div class="seg old"  style="grid-row: 2; grid-column: 8 / 10; --d: 2" data-zh="高等课程" data-en="Advanced">高等课程</div>
+    <div class="seg late" style="grid-row: 2; grid-column: 10 / 12; --d: 3" data-zh="前沿？" data-en="Frontier?">前沿？</div>
+
+    <div class="tl-label" style="grid-row: 3" data-zh="这套手册" data-en="These booklets">这套手册</div>
+    <div class="seg new"   style="grid-row: 3; grid-column: 2 / 6; --d: 0.5" data-zh="九本手册" data-en="Nine booklets">九本手册</div>
+    <div class="seg front" style="grid-row: 3; grid-column: 6 / 12; --d: 1.5" data-zh="前沿物理 →" data-en="Frontier physics →">前沿物理 →</div>
+  </div>
+</section>
+
+<div class="principles">
+  <div class="principle"><b data-zh="双语" data-en="Bilingual">双语</b>
+    <p data-zh="中英对照，随时一键切换。" data-en="English and Chinese, switch any time.">中英对照，随时一键切换。</p></div>
+  <div class="principle"><b data-zh="直观" data-en="Intuitive">直观</b>
+    <p data-zh="动画与交互：先看见，再计算。" data-en="Animations and interactions: see it first, then calculate.">动画与交互：先看见，再计算。</p></div>
+  <div class="principle"><b data-zh="简洁" data-en="Simple">简洁</b>
+    <p data-zh="不堆砌文字，只讲要点。" data-en="No padding — only what matters.">不堆砌文字，只讲要点。</p></div>
+  <div class="principle"><b data-zh="数学" data-en="Mathematical">数学</b>
+    <p data-zh="超出高中的数学，都会循序渐进地教。" data-en="Every bit of math beyond high school is taught step by step.">超出高中的数学，都会循序渐进地教。</p></div>
+  <div class="principle"><b data-zh="练习" data-en="Practice">练习</b>
+    <p data-zh="每章配海量习题，一组 10 题答对 9 题即通过。" data-en="Every chapter has a large problem bank: get 9 of 10 right to pass.">每章配海量习题，一组 10 题答对 9 题即通过。</p></div>
+</div>
+
+<section class="map" id="map">
+  <h2 data-zh="学习地图" data-en="Learning Map">学习地图</h2>
+  <p class="hint" data-zh="箭头表示前置关系。点击任意一册，查看它的前置知识与推荐学习路径。"
+     data-en="Arrows show prerequisites. Click any booklet to see what it builds on and a suggested learning path.">
+     箭头表示前置关系。点击任意一册，查看它的前置知识与推荐学习路径。</p>
+  <div class="map-grid">
+    <div class="graph-wrap">
+      <svg id="graph" viewBox="0 0 900 600" role="group" aria-label="Prerequisite map / 前置关系图"></svg>
+    </div>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+</section>
+
+<footer data-zh="持续编写中 · 欢迎反馈" data-en="Work in progress · Feedback welcome">持续编写中 · 欢迎反馈</footer>
+
+<script>
+/* =========================================================
+   Booklet data. To publish a booklet, set ready: true and
+   put its pages in the folder named by `slug`.
+   ========================================================= */
+const BOOKS = [
+  // Order = numbering: top-to-bottom, left-to-right as on the map. Every prerequisite sits in a higher row,
+  // so this is also a valid reading order (used for the suggested learning path).
+  { id: "cm", slug: "classical-mechanics", color: "#3b6fd8", x: 475, y: 70, ready: true,
+    title: { zh: "经典力学", en: "Classical Mechanics" },
+    eq: "F = ma",
+    desc: { zh: "从牛顿定律出发，到拉格朗日与哈密顿力学。整套书的起点。",
+            en: "From Newton's laws to Lagrangian and Hamiltonian mechanics. The starting point of the series." },
+    math: [ { zh: "微积分", en: "Calculus" }, { zh: "线性代数", en: "Linear Algebra" }, { zh: "复数", en: "Complex Numbers" } ],
+    prereq: [] },
+  { id: "sp", slug: "thermodynamics-and-statistical-physics", color: "#c94f4f", x: 300, y: 200, ready: false,
+    title: { zh: "热力学与统计物理", en: "Thermodynamics and Statistical Physics" },
+    short: { en: "Thermo. & Stat. Physics" },  // optional shorter label for the map
+    eq: "S = k ln Ω",
+    desc: { zh: "热力学定律，以及如何从大量粒子的随机运动中理解温度、熵与相变。",
+            en: "The laws of thermodynamics, and how temperature, entropy and phase transitions emerge from the random motion of many particles." },
+    math: [ { zh: "数理统计", en: "Mathematical Statistics" } ],
+    prereq: ["cm"] },
+  { id: "wo", slug: "waves-and-optics", color: "#139c9c", x: 650, y: 200, ready: false,
+    title: { zh: "波动与光学", en: "Waves and Optics" },
+    eq: "y = A e^{i(kx − ωt)}",
+    desc: { zh: "振动、波的叠加、干涉与衍射，以及几何光学。",
+            en: "Oscillations, superposition, interference, diffraction and geometric optics." },
+    math: [],
+    prereq: ["cm"] },
+  { id: "cos", slug: "cosmology", color: "#4b5bc4", x: 125, y: 330, ready: false,
+    title: { zh: "宇宙学", en: "Cosmology" },
+    eq: "v = H₀ d",
+    desc: { zh: "膨胀的宇宙、大爆炸与宇宙微波背景辐射。",
+            en: "The expanding universe, the Big Bang and the cosmic microwave background." },
+    math: [],
+    prereq: ["cm", "sp"] },
+  { id: "qm", slug: "quantum-mechanics", color: "#8e4fbf", x: 475, y: 330, ready: false,
+    title: { zh: "量子力学", en: "Quantum Mechanics" },
+    eq: "iħ ∂ψ/∂t = Ĥψ",
+    desc: { zh: "波函数、薛定谔方程、自旋与对称性。",
+            en: "Wavefunctions, the Schrödinger equation, spin and symmetry." },
+    math: [ { zh: "群论", en: "Group Theory" } ],
+    prereq: ["cm", "wo"] },
+  { id: "ed", slug: "electrodynamics", color: "#d9822b", x: 780, y: 330, ready: false,
+    title: { zh: "电动力学", en: "Electrodynamics" },
+    eq: "∇·E = ρ/ε₀",
+    desc: { zh: "电场、磁场与麦克斯韦方程组——以及为什么光是电磁波。",
+            en: "Electric and magnetic fields, Maxwell's equations — and why light is an electromagnetic wave." },
+    math: [ { zh: "偏微分方程", en: "Partial Differential Equations" } ],
+    prereq: ["cm", "wo"] },
+  { id: "ssp", slug: "solid-state-physics", color: "#2e8b57", x: 150, y: 490, ready: false,
+    title: { zh: "固体物理", en: "Solid State Physics" },
+    eq: "Eₙ(k)",
+    desc: { zh: "晶格、能带、电子与声子：金属、绝缘体与半导体为何不同。",
+            en: "Crystals, bands, electrons and phonons: why metals, insulators and semiconductors differ." },
+    math: [],
+    prereq: ["qm", "sp"] },
+  { id: "cp", slug: "computational-physics", color: "#7a8a1e", x: 475, y: 490, ready: false,
+    title: { zh: "计算物理", en: "Computational Physics" },
+    eq: "xₙ₊₁ = xₙ + vₙΔt",
+    desc: { zh: "用代码解物理：数值积分、蒙特卡洛模拟，以及量子系统的数值求解。",
+            en: "Physics with code: numerical integration, Monte Carlo simulation, and solving quantum systems numerically." },
+    math: [],
+    prereq: ["sp", "qm"] },
+  { id: "aqm", slug: "advanced-quantum-mechanics", color: "#b0447a", x: 780, y: 490, ready: false,
+    title: { zh: "高等量子力学", en: "Advanced Quantum Mechanics" },
+    eq: "[a, a†] = 1",
+    desc: { zh: "二次量子化、散射理论、路径积分与相对论性量子力学。",
+            en: "Second quantization, scattering theory, path integrals and relativistic quantum mechanics." },
+    math: [],
+    prereq: ["qm", "sp"] },
+];
+
+const UI = {
+  vol:        { zh: "第 {n} 册",            en: "Vol. {n}" },
+  planned:    { zh: "编写中",               en: "In progress" },
+  available:  { zh: "已上线",               en: "Available" },
+  math:       { zh: "顺带学习的数学",        en: "Math you'll learn" },
+  mathNone:   { zh: "沿用前置册中的数学工具", en: "Uses tools from earlier booklets" },
+  prereq:     { zh: "前置",                 en: "Prerequisites" },
+  prereqNone: { zh: "无——从这里开始",        en: "None — start here" },
+  path:       { zh: "推荐学习路径",          en: "Suggested path" },
+  unlocks:    { zh: "学完之后可以读",        en: "Unlocks" },
+  unlocksNone:{ zh: "——",                   en: "—" },
+  read:       { zh: "开始阅读",             en: "Start reading" },
+  soon:       { zh: "即将推出",             en: "Coming soon" },
+  emptyTitle: { zh: "选择一册",             en: "Pick a booklet" },
+  emptyText:  { zh: "点击左侧地图中的任意一册。它的前置链条会被点亮，这里会显示内容简介与学习路径。",
+                en: "Click any booklet on the map. Its chain of prerequisites lights up, and this panel shows a summary and a learning path." },
+  legendPath: { zh: "点亮的箭头：需要先读的内容", en: "Lit arrows: what to read first" },
+  start:      { zh: "从这里开始",            en: "Start here" },
+};
+
+/* ---------- graph helpers ---------- */
+const byId = Object.fromEntries(BOOKS.map((b, i) => [b.id, { ...b, vol: i + 1 }]));
+const ancestors = id => {
+  const out = new Set();
+  const walk = k => byId[k].prereq.forEach(p => { if (!out.has(p)) { out.add(p); walk(p); } });
+  walk(id);
+  return out;
+};
+const children = id => BOOKS.filter(b => b.prereq.includes(id)).map(b => b.id);
+const descendants = id => {
+  const out = new Set();
+  const walk = k => children(k).forEach(c => { if (!out.has(c)) { out.add(c); walk(c); } });
+  walk(id);
+  return out;
+};
+// Draw only the direct arrows that are not implied by another path (transitive reduction).
+const EDGES = [];
+BOOKS.forEach(b => b.prereq.forEach(p => {
+  const implied = b.prereq.some(q => q !== p && ancestors(q).has(p));
+  if (!implied) EDGES.push([p, b.id]);
+}));
+
+/* ---------- state ---------- */
+let lang = localStorage.getItem("booklets-lang") ||
+           ((navigator.language || "").toLowerCase().startsWith("zh") ? "zh" : "en");
+let locked = null;   // selected by click
+let preview = null;  // selected by hover
+
+const t = (obj, vars = {}) => obj[lang].replace(/\{(\w+)\}/g, (_, k) => vars[k]);
+const other = () => (lang === "zh" ? "en" : "zh");
+
+/* ---------- SVG map ---------- */
+const svg = document.getElementById("graph");
+const NS = "http://www.w3.org/2000/svg";
+const W = 220, H = 70;
+// Equations may contain ^{...} for superscripts.
+const eqParts = eq => eq.split(/(\^\{[^}]*\})/).filter(Boolean)
+  .map(p => p.startsWith("^{") ? { sup: true, text: p.slice(2, -1) } : { sup: false, text: p });
+const eqHTML = eq => eqParts(eq).map(p => (p.sup ? `<sup>${p.text}</sup>` : p.text)).join("");
+function eqSVG(textEl, eq) {
+  let raised = false;
+  eqParts(eq).forEach(p => {
+    const ts = el("tspan", {}, textEl);
+    if (p.sup !== raised) ts.setAttribute("dy", p.sup ? -6 : 6);
+    if (p.sup) ts.style.fontSize = "10px";
+    raised = p.sup;
+    ts.textContent = p.text;
+  });
+}
+
+const el = (tag, attrs = {}, parent) => {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+};
+
+function buildGraph() {
+  svg.innerHTML = "";
+  const defs = el("defs", {}, svg);
+  const marker = el("marker", { id: "arrow", viewBox: "0 0 10 10", refX: 9, refY: 5,
+    markerWidth: 7, markerHeight: 7, orient: "auto-start-reverse" }, defs);
+  el("path", { d: "M0,0 L10,5 L0,10 z", style: "fill: var(--muted)" }, marker);
+
+  const edgeLayer = el("g", {}, svg);
+  EDGES.forEach(([a, b]) => {
+    const A = byId[a], B = byId[b];
+    const x1 = A.x, y1 = A.y + H / 2, x2 = B.x, y2 = B.y - H / 2 - 4;
+    // An edge that skips a row runs straight down (through a gap left in the layout), then bends.
+    const yb = B.y - A.y > 200 ? B.y - H / 2 - 75 : y1;
+    const my = (yb + y2) / 2;
+    el("path", { class: "edge", "data-from": a, "data-to": b, "marker-end": "url(#arrow)",
+      d: `M${x1},${y1} L${x1},${yb} C${x1},${my} ${x2},${my} ${x2},${y2}` }, edgeLayer);
+  });
+
+  BOOKS.forEach(b0 => {
+    const b = byId[b0.id];
+    const g = el("g", { class: "node", "data-id": b.id, tabindex: 0, role: "button",
+      style: `--c:${b.color}` }, svg);
+    el("rect", { class: "box", x: b.x - W / 2, y: b.y - H / 2, width: W, height: H, rx: 14 }, g);
+    el("circle", { class: "badge", cx: b.x - W / 2 + 22, cy: b.y, r: 12 }, g);
+    el("text", { class: "badge-t", x: b.x - W / 2 + 22, y: b.y }, g).textContent = b.vol;
+    const title = el("text", { class: "title", x: b.x + 12, y: b.y - 5 }, g);
+    title.textContent = (b.short && b.short[lang]) || b.title[lang];
+    const room = W - 56, len = title.getComputedTextLength();
+    if (len > room) title.style.fontSize = `${(17 * room) / len}px`;  // shrink long titles to fit
+    eqSVG(el("text", { class: "eq", x: b.x + 12, y: b.y + 18 }, g), b.eq);
+
+    g.addEventListener("mouseenter", () => { preview = b.id; render(); });
+    g.addEventListener("mouseleave", () => { preview = null; render(); });
+    g.addEventListener("click", () => { locked = locked === b.id ? null : b.id; render(); });
+    g.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); locked = b.id; render(); }
+    });
+  });
+}
+
+function render() {
+  const sel = preview || locked;
+  const book = sel && byId[sel];
+  document.documentElement.style.setProperty("--sel", book ? book.color : "var(--accent)");
+
+  const up = sel ? ancestors(sel) : new Set();
+  const down = sel ? descendants(sel) : new Set();
+
+  svg.querySelectorAll(".node").forEach(n => {
+    const id = n.dataset.id;
+    n.classList.toggle("self", id === sel);
+    n.classList.toggle("next", !!sel && down.has(id));
+    n.classList.toggle("dim", !!sel && id !== sel && !up.has(id) && !down.has(id));
+    n.setAttribute("aria-pressed", id === locked);
+    n.setAttribute("aria-label", `${byId[id].title.zh} ${byId[id].title.en}`);
+  });
+  svg.querySelectorAll(".edge").forEach(e => {
+    const a = e.dataset.from, b = e.dataset.to;
+    const onPath = sel && (b === sel || up.has(b)) && up.has(a);
+    const forward = sel && (a === sel || down.has(a)) && down.has(b);
+    e.classList.toggle("on", !!onPath);
+    e.classList.toggle("next", !!forward);
+    e.classList.toggle("dim", !!sel && !onPath && !forward);
+  });
+  svg.querySelectorAll(".edge.next, .edge.on").forEach(e => e.parentNode.appendChild(e));  // draw lit edges on top
+
+  renderPanel(book);
+}
+
+/* ---------- detail panel ---------- */
+const panel = document.getElementById("panel");
+const chip = id => `<button class="chip" type="button" data-go="${id}" style="--c:${byId[id].color}">${byId[id].title[lang]}</button>`;
+
+function renderPanel(b) {
+  if (!b) {
+    panel.innerHTML = `
+      <div class="empty">
+        <h3>${t(UI.emptyTitle)}</h3>
+        <p class="alt">${UI.emptyTitle[other()]}</p>
+        <p>${t(UI.emptyText)}</p>
+        <div class="legend"><div><span></span>${t(UI.legendPath)}</div></div>
+        <h4>${t(UI.start)}</h4>
+        <div class="chips">${chip("cm")}</div>
+      </div>`;
+  } else {
+    const path = BOOKS.filter(x => ancestors(b.id).has(x.id) || x.id === b.id).map(x => x.id);
+    const kids = children(b.id);
+    const href = `${b.slug}/index.html`;
+    panel.innerHTML = `
+      <div class="meta"><span>${t(UI.vol, { n: b.vol })}</span>
+        <span class="status">${t(b.ready ? UI.available : UI.planned)}</span></div>
+      <h3>${b.title[lang]}</h3>
+      <p class="alt">${b.title[other()]}</p>
+      <p class="eq">${eqHTML(b.eq)}</p>
+      <p>${b.desc[lang]}</p>
+
+      <h4>${t(UI.math)}</h4>
+      ${b.math.length
+        ? `<div class="chips">${b.math.map(m => `<span class="chip">${m[lang]}</span>`).join("")}</div>`
+        : `<p class="none">${t(UI.mathNone)}</p>`}
+
+      <h4>${t(UI.prereq)}</h4>
+      ${b.prereq.length
+        ? `<div class="chips">${b.prereq.map(chip).join("")}</div>`
+        : `<p class="none">${t(UI.prereqNone)}</p>`}
+
+      ${path.length > 1 ? `<h4>${t(UI.path)}</h4>
+        <ol class="path">${path.map(id => `<li>${chip(id)}</li>`).join("")}</ol>` : ""}
+
+      <h4>${t(UI.unlocks)}</h4>
+      ${kids.length
+        ? `<div class="chips">${kids.map(chip).join("")}</div>`
+        : `<p class="none">${t(UI.unlocksNone)}</p>`}
+
+      <a class="read" href="${href}" aria-disabled="${!b.ready}">${t(b.ready ? UI.read : UI.soon)}</a>`;
+  }
+  panel.querySelectorAll("[data-go]").forEach(btn =>
+    btn.addEventListener("click", () => { locked = btn.dataset.go; preview = null; render(); }));
+}
+
+/* ---------- language ---------- */
+const langBtn = document.getElementById("langBtn");
+function applyLang() {
+  document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+  document.querySelectorAll("[data-zh]").forEach(e => { e.textContent = e.dataset[lang]; });
+  langBtn.textContent = lang === "zh" ? "EN" : "中文";
+  document.title = lang === "zh"
+    ? "直抵前沿 · Frontier Bound"
+    : "Frontier Bound · 直抵前沿";
+  buildGraph();
+  render();
+}
+langBtn.addEventListener("click", () => {
+  lang = other();
+  localStorage.setItem("booklets-lang", lang);
+  applyLang();
+});
+
+/* ---------- hero animation: two waves and their superposition ---------- */
+(function waves() {
+  const cv = document.getElementById("waves");
+  const ctx = cv.getContext("2d");
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const dark = window.matchMedia("(prefers-color-scheme: dark)");
+  let w = 0, h = 0;
+
+  function resize() {
+    const dpr = window.devicePixelRatio || 1;
+    w = cv.clientWidth; h = cv.clientHeight;
+    cv.width = w * dpr; cv.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function line(f, color, width) {
+    ctx.beginPath();
+    for (let x = 0; x <= w; x += 4) {
+      const y = h * 0.62 + f(x);
+      x ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.stroke();
+  }
+  function frame(ms) {
+    const s = ms / 1000;
+    const A = Math.min(h * 0.09, 28);
+    const k = (2 * Math.PI) / Math.max(w / 3.2, 260);
+    const f1 = x => A * Math.sin(k * x - 1.1 * s);
+    const f2 = x => A * Math.sin(1.25 * k * x + 0.9 * s);
+    const a = dark.matches ? 0.22 : 0.16;
+    ctx.clearRect(0, 0, w, h);
+    line(f1, `rgba(59,111,216,${a})`, 1.5);
+    line(f2, `rgba(19,156,156,${a})`, 1.5);
+    line(x => f1(x) + f2(x), `rgba(142,79,191,${a * 1.6})`, 2.2);
+    if (!still) requestAnimationFrame(frame);
+  }
+  resize();
+  window.addEventListener("resize", () => { resize(); if (still) frame(0); });
+  requestAnimationFrame(frame);
+})();
+
+/* ---------- reveal the timeline when it scrolls into view ---------- */
+(function () {
+  const tl = document.getElementById("timeline");
+  if (!("IntersectionObserver" in window)) { tl.classList.add("shown"); return; }
+  const io = new IntersectionObserver(entries => {
+    if (entries.some(e => e.isIntersecting)) { tl.classList.add("shown"); io.disconnect(); }
+  }, { threshold: 0.4 });
+  io.observe(tl);
+})();
+
+applyLang();
+</script>
+</body>
+</html>
