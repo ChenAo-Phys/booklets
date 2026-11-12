@@ -1,5 +1,7 @@
 # 直抵前沿 · Frontier Bound
 
+**在线阅读 · Read online:** <https://chenao-phys.github.io/booklets/>
+
 写给物理初学者的九本互动手册。
 Nine interactive booklets for beginning physicists.
 
