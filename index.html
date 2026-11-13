@@ -180,12 +180,6 @@
   .legend span { display: inline-block; width: 26px; height: 0; vertical-align: middle; margin-right: 0.5rem; border-top: 2.6px dashed var(--accent); }
 
   footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 2rem 1rem 3rem; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .edge.on { animation: none; }
-    .seg { transition: none; }
-    html { scroll-behavior: auto; }
-  }
 </style>
 </head>
 <body>
@@ -540,7 +534,6 @@ langBtn.addEventListener("click", () => {
 (function waves() {
   const cv = document.getElementById("waves");
   const ctx = cv.getContext("2d");
-  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const dark = window.matchMedia("(prefers-color-scheme: dark)");
   let w = 0, h = 0;
 
@@ -569,10 +562,10 @@ langBtn.addEventListener("click", () => {
     line(f1, `rgba(59,111,216,${a})`, 1.5);
     line(f2, `rgba(19,156,156,${a})`, 1.5);
     line(x => f1(x) + f2(x), `rgba(142,79,191,${a * 1.6})`, 2.2);
-    if (!still) requestAnimationFrame(frame);
+    requestAnimationFrame(frame);
   }
   resize();
-  window.addEventListener("resize", () => { resize(); if (still) frame(0); });
+  window.addEventListener("resize", resize);
   requestAnimationFrame(frame);
 })();
 

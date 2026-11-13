@@ -23,7 +23,8 @@ Six interactive physics booklets that take beginners through the foundations of 
 
 ## Conventions
 - One folder per booklet; `<folder>/index.html` is its contents page, chapters are `NN-<slug>.html`.
-- Shared styles and scripts live in `assets/` (`booklet.css`, `booklet.js`: language switch, KaTeX).
+- Shared styles and scripts live in `assets/` (`booklet.css`, `booklet.js`: language switch, KaTeX). Every booklet page loads only these two in `<head>`. Put anything all pages need into them, not into single pages.
 - Chapter pages: put text in `lang="zh"` / `lang="en"` elements. Home page: use `data-zh` / `data-en` attributes.
 - When a booklet is ready, set `ready: true` in the `BOOKS` array in `index.html`.
+- Animations always play at normal speed. Do not pause or slow them for `prefers-reduced-motion`.
 - Avoid using too many ";" and ":" in the text.
