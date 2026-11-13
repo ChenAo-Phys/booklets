@@ -2,8 +2,8 @@
 
 **在线阅读 · Read online:** <https://chenao-phys.github.io/booklets/>
 
-写给物理初学者的九本互动手册。
-Nine interactive booklets for beginning physicists.
+写给物理初学者的六本互动手册。
+Six interactive booklets for beginning physicists.
 
 ## 理念 · Principles
 
@@ -13,6 +13,7 @@ Nine interactive booklets for beginning physicists.
 | **直观 Intuitive** | 以 HTML 呈现，配合动画与交互：先看见，再计算。 | Written in HTML with animations and interactions: see it first, then calculate. |
 | **简洁 Simple** | 不堆砌文字，只讲要点。 | No padding — only what matters. |
 | **数学 Mathematical** | 超出高中的数学，都在用到时循序渐进地教。 | Every bit of math beyond high school is taught step by step, when it is needed. |
+| **计算 Computational** | 公式与软件并用，直抵前沿研究。 | Formulas and software together, straight to frontier research. |
 | **练习 Practice** | 每章配海量习题，每次抽一组 10 题，答对 9 题即通过测试。 | Every chapter has a large problem bank; each test draws 10 problems, and 9 correct passes. |
 
 ## 书目 · Booklets
@@ -20,43 +21,31 @@ Nine interactive booklets for beginning physicists.
 | # | 手册 Booklet | 前置 Prerequisites | 顺带学习的数学 Math taught inside |
 |---|---|---|---|
 | 1 | 经典力学 Classical Mechanics | — | 微积分 Calculus, 线性代数 Linear Algebra, 复数 Complex Numbers |
-| 2 | 热力学与统计物理 Thermodynamics and Statistical Physics | 1 | 数理统计 Mathematical Statistics |
-| 3 | 波动与光学 Waves and Optics | 1 | — |
-| 4 | 宇宙学 Cosmology | 1, 2 | — |
-| 5 | 量子力学 Quantum Mechanics | 1, 3 | 群论 Group Theory |
-| 6 | 电动力学 Electrodynamics | 1, 3 | 偏微分方程 Partial Differential Equations |
-| 7 | 固体物理 Solid State Physics | 2, 5 | — |
-| 8 | 计算物理 Computational Physics | 2, 5 | — |
-| 9 | 高等量子力学 Advanced Quantum Mechanics | 2, 5 | — |
+| 2 | 波动与光学 Waves and Optics | 1 | — |
+| 3 | 量子力学 Quantum Mechanics | 2 | 群论 Group Theory |
+| 4 | 电动力学 Electrodynamics | 2 | 偏微分方程 Partial Differential Equations |
+| 5 | 热力学与统计物理 Thermodynamics and Statistical Physics | 3 | 数理统计 Mathematical Statistics |
+| 6 | 高等量子力学 Advanced Quantum Mechanics | 5 | — |
 
 ## 学习地图 · Learning Map
 
 ```mermaid
 graph TD
   CM["1 经典力学<br/>Classical Mechanics"]
-  SP["2 热力学与统计物理<br/>Thermodynamics and Statistical Physics"]
-  WO["3 波动与光学<br/>Waves and Optics"]
-  COS["4 宇宙学<br/>Cosmology"]
-  QM["5 量子力学<br/>Quantum Mechanics"]
-  ED["6 电动力学<br/>Electrodynamics"]
-  SSP["7 固体物理<br/>Solid State Physics"]
-  CP["8 计算物理<br/>Computational Physics"]
-  AQM["9 高等量子力学<br/>Advanced Quantum Mechanics"]
-  CM --> SP
+  WO["2 波动与光学<br/>Waves and Optics"]
+  QM["3 量子力学<br/>Quantum Mechanics"]
+  ED["4 电动力学<br/>Electrodynamics"]
+  SP["5 热力学与统计物理<br/>Thermodynamics and Statistical Physics"]
+  AQM["6 高等量子力学<br/>Advanced Quantum Mechanics"]
   CM --> WO
-  SP --> COS
   WO --> QM
   WO --> ED
-  SP --> SSP
-  QM --> SSP
-  SP --> CP
-  QM --> CP
+  QM --> SP
   SP --> AQM
-  QM --> AQM
 ```
 
-图中省略了可由其他箭头推出的前置关系（例如经典力学 → 量子力学）。
-Arrows implied by other arrows are omitted (e.g. Classical Mechanics → Quantum Mechanics).
+表格与地图只列出直接前置，更早的前置沿箭头往上追溯即可。
+The table and the map list only direct prerequisites. Follow the arrows upward for earlier ones.
 
 ## 目录结构 · Structure
 
@@ -70,13 +59,10 @@ booklets/
 ├── classical-mechanics/     # 每本手册一个文件夹 · One folder per booklet
 │   ├── index.html           #   本册目录 · Contents of the booklet
 │   └── 01-motion-and-derivative.html   # 第 1 章 · Chapter 1
-├── thermodynamics-and-statistical-physics/
 ├── waves-and-optics/
-├── cosmology/
 ├── quantum-mechanics/
 ├── electrodynamics/
-├── solid-state-physics/
-├── computational-physics/
+├── thermodynamics-and-statistical-physics/
 └── advanced-quantum-mechanics/
 ```
 
