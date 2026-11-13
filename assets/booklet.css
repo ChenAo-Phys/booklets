@@ -157,20 +157,22 @@ details > div { padding: 0.4rem 0 0 0.8rem; border-left: 2px solid var(--line); 
 /* ---------- booklet contents page ---------- */
 .chapters { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: 0.6rem; }
 .chapters li > a, .chapters li > div {
-  display: grid; grid-template-columns: 2.6rem 1fr auto; align-items: center; gap: 0.8rem;
+  display: grid; grid-template-columns: 2.6rem 1fr auto; grid-template-areas: "n t m" "n s m";
+  align-items: center; column-gap: 0.8rem; row-gap: 0.15rem;
   padding: 0.75rem 1rem; border-radius: 14px; text-decoration: none; color: var(--ink);
   background: var(--card); border: 1px solid var(--line);
 }
 .chapters li > a:hover { border-color: var(--book); }
 .chapters li > div { opacity: 0.6; }
 .chapters .n {
+  grid-area: n;
   width: 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center;
   background: var(--book); color: #fff; font-weight: 600;
 }
 .chapters li > div .n { background: var(--soft); color: var(--muted); }
-.chapters .t { font-weight: 600; line-height: 1.35; }
-.chapters .m { display: block; font-weight: 400; color: var(--muted); font-size: 0.85rem; }
-.chapters .s { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
+.chapters .t { grid-area: t; font-weight: 600; line-height: 1.35; }
+.chapters .m { grid-area: m; color: var(--muted); font-size: 0.85rem; text-align: right; max-width: 14rem; }
+.chapters .s { grid-area: s; font-size: 0.8rem; color: var(--muted); }
 
 footer { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 1rem 1rem 3rem; }
 footer a { color: var(--muted); }

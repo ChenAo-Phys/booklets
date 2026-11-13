@@ -58,7 +58,7 @@ booklets/
 │   └── booklet.js           #   中英切换、KaTeX 公式 · Language switch, KaTeX math
 ├── classical-mechanics/     # 每本手册一个文件夹 · One folder per booklet
 │   ├── index.html           #   本册目录 · Contents of the booklet
-│   └── 01-motion-and-derivative.html   # 第 1 章 · Chapter 1
+│   └── 01-describing-motion.html      # 第 1 章 · Chapter 1
 ├── waves-and-optics/
 ├── quantum-mechanics/
 ├── electrodynamics/
