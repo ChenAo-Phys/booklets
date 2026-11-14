@@ -278,7 +278,7 @@ const BOOKS = [
     math: [ { zh: "微积分", en: "Calculus" }, { zh: "线性代数", en: "Linear Algebra" }, { zh: "复数", en: "Complex Numbers" } ],
     prereq: [] },
   { id: "wo", slug: "waves-and-optics", color: "#139c9c", x: 475, y: 180, ready: false,
-    title: { zh: "波动与光学", en: "Waves and Optics" },
+    title: { zh: "波与光学", en: "Waves and Optics" },
     eq: "y = A e^{i(kx − ωt)}",
     desc: { zh: "振动、波的叠加、干涉与衍射，以及几何光学。",
             en: "Oscillations, superposition, interference, diffraction and geometric optics." },
@@ -298,9 +298,8 @@ const BOOKS = [
             en: "Electric and magnetic fields, Maxwell's equations — and why light is an electromagnetic wave." },
     math: [ { zh: "偏微分方程", en: "Partial Differential Equations" } ],
     prereq: ["wo"] },
-  { id: "sp", slug: "thermodynamics-and-statistical-physics", color: "#c94f4f", x: 475, y: 420, ready: false,
-    title: { zh: "热力学与统计物理", en: "Thermodynamics and Statistical Physics" },
-    short: { en: "Thermo. & Stat. Physics" },  // optional shorter label for the map
+  { id: "sp", slug: "statistical-physics", color: "#c94f4f", x: 475, y: 420, ready: false,
+    title: { zh: "统计物理", en: "Statistical Physics" },
     eq: "S = k ln Ω",
     desc: { zh: "热力学定律，以及如何从大量粒子的随机运动中理解温度、熵与相变。",
             en: "The laws of thermodynamics, and how temperature, entropy and phase transitions emerge from the random motion of many particles." },
@@ -336,7 +335,8 @@ const UI = {
 };
 
 /* ---------- graph helpers ---------- */
-const byId = Object.fromEntries(BOOKS.map((b, i) => [b.id, { ...b, vol: i + 1 }]));
+const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
+const byId = Object.fromEntries(BOOKS.map((b, i) => [b.id, { ...b, vol: ROMAN[i] }]));
 const ancestors = id => {
   const out = new Set();
   const walk = k => byId[k].prereq.forEach(p => { if (!out.has(p)) { out.add(p); walk(p); } });

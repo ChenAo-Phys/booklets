@@ -14,12 +14,12 @@ Six interactive physics booklets that take beginners through the foundations of 
 ## Booklets
 | # | Booklet | Prerequisites | Math taught inside |
 |---|---|---|---|
-| 1 | Classical Mechanics | — | Calculus, Linear Algebra, Complex Numbers |
-| 2 | Waves and Optics | 1 | — |
-| 3 | Quantum Mechanics | 2 | Group Theory |
-| 4 | Electrodynamics | 2 | Partial Differential Equations |
-| 5 | Thermodynamics and Statistical Physics | 3 | Mathematical Statistics |
-| 6 | Advanced Quantum Mechanics | 5 | — |
+| I | Classical Mechanics | — | Calculus, Linear Algebra, Complex Numbers |
+| II | Waves and Optics | I | — |
+| III | Quantum Mechanics | II | Group Theory |
+| IV | Electrodynamics | II | Partial Differential Equations |
+| V | Statistical Physics | III | Mathematical Statistics |
+| VI | Advanced Quantum Mechanics | V | — |
 
 ## Conventions
 - One folder per booklet; `<folder>/index.html` is its contents page, chapters are `NN-<slug>.html`.

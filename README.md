@@ -20,23 +20,23 @@ Six interactive booklets for beginning physicists.
 
 | # | 手册 Booklet | 前置 Prerequisites | 顺带学习的数学 Math taught inside |
 |---|---|---|---|
-| 1 | 经典力学 Classical Mechanics | — | 微积分 Calculus, 线性代数 Linear Algebra, 复数 Complex Numbers |
-| 2 | 波动与光学 Waves and Optics | 1 | — |
-| 3 | 量子力学 Quantum Mechanics | 2 | 群论 Group Theory |
-| 4 | 电动力学 Electrodynamics | 2 | 偏微分方程 Partial Differential Equations |
-| 5 | 热力学与统计物理 Thermodynamics and Statistical Physics | 3 | 数理统计 Mathematical Statistics |
-| 6 | 高等量子力学 Advanced Quantum Mechanics | 5 | — |
+| I | 经典力学 Classical Mechanics | — | 微积分 Calculus, 线性代数 Linear Algebra, 复数 Complex Numbers |
+| II | 波与光学 Waves and Optics | I | — |
+| III | 量子力学 Quantum Mechanics | II | 群论 Group Theory |
+| IV | 电动力学 Electrodynamics | II | 偏微分方程 Partial Differential Equations |
+| V | 统计物理 Statistical Physics | III | 数理统计 Mathematical Statistics |
+| VI | 高等量子力学 Advanced Quantum Mechanics | V | — |
 
 ## 学习地图 · Learning Map
 
 ```mermaid
 graph TD
-  CM["1 经典力学<br/>Classical Mechanics"]
-  WO["2 波动与光学<br/>Waves and Optics"]
-  QM["3 量子力学<br/>Quantum Mechanics"]
-  ED["4 电动力学<br/>Electrodynamics"]
-  SP["5 热力学与统计物理<br/>Thermodynamics and Statistical Physics"]
-  AQM["6 高等量子力学<br/>Advanced Quantum Mechanics"]
+  CM["I 经典力学<br/>Classical Mechanics"]
+  WO["II 波与光学<br/>Waves and Optics"]
+  QM["III 量子力学<br/>Quantum Mechanics"]
+  ED["IV 电动力学<br/>Electrodynamics"]
+  SP["V 统计物理<br/>Statistical Physics"]
+  AQM["VI 高等量子力学<br/>Advanced Quantum Mechanics"]
   CM --> WO
   WO --> QM
   WO --> ED
@@ -62,7 +62,7 @@ booklets/
 ├── waves-and-optics/
 ├── quantum-mechanics/
 ├── electrodynamics/
-├── thermodynamics-and-statistical-physics/
+├── statistical-physics/
 └── advanced-quantum-mechanics/
 ```
 
@@ -88,4 +88,4 @@ python3 -m http.server 8000
 
 🚧 编写中 · Work in progress
 
-- 第 1 册 经典力学：目录已建立，第 1 章待写。Vol. 1 Classical Mechanics: contents page in place, Chapter 1 not yet written.
+- 第 I 册 经典力学：目录已建立，第 1 章待写。Vol. I Classical Mechanics: contents page in place, Chapter 1 not yet written.
